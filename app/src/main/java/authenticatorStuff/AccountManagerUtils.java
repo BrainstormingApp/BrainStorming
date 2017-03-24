@@ -32,7 +32,6 @@ public class AccountManagerUtils {
     private AccountManager mAccountManager;
 
     // Constructor
-    @Inject
     public AccountManagerUtils(Context context){
         this._context = context;
         this.mAccountManager = AccountManager.get(context);

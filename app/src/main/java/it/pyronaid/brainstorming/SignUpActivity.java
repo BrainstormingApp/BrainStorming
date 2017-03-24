@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import applications.BrainStormingApplications;
+import authenticatorStuff.User;
+import databaseStuff.BrainStormingSQLiteHelper;
 import dialogs.SimpleDialogFragment;
 import authenticatorStuff.AccountGeneral;
 import authenticatorStuff.ParseComAnswer;
@@ -42,6 +44,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Inject
     ValidatorInputs validatorInputs;
+
+    @Inject
+    BrainStormingSQLiteHelper brainStormingSQLiteHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

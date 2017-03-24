@@ -9,6 +9,8 @@ public class User implements Serializable {
     private String name;
     private String surname;
     private String email;
+    private String phone;
+    private String birthday;
     private String timeRegistration;
     private String timeLastLogin;
     public String authType;
@@ -71,5 +73,20 @@ public class User implements Serializable {
         this.authToken = authToken;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 }
 

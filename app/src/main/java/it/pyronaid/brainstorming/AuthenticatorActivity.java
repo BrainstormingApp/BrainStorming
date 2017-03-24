@@ -14,13 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.inject.Inject;
 
 import applications.BrainStormingApplications;
-import authenticatorStuff.AccountManagerUtils;
+import authenticatorStuff.User;
 import databaseStuff.BrainStormingSQLiteHelper;
 import dialogs.SimpleDialogFragment;
 import authenticatorStuff.AccountAuthenticatorActivity;
@@ -60,6 +57,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Inject
     BrainStormingSQLiteHelper brainStormingSQLiteHelper;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -174,6 +172,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Bundle data = new Bundle();
                 try {
                     answer = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
+
+                    brainStormingSQLiteHelper.saveUser(answer.getUser());
 
                     if(answer.getError().toUpperCase().equals(ERROR_FALSE)) {
                         SystemClock.sleep(2000);

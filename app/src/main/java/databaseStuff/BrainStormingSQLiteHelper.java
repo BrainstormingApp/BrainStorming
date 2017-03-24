@@ -5,15 +5,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Singleton;
+
+import authenticatorStuff.User;
 
 /**
  * Created by pyronaid on 07/03/2017.
  */
 @Singleton
 public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
-    public static final String TABLE_ACCOUNT = "account";
+    public static final String TABLE_ACCOUNT_NAME = "account";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SURNAME = "surname";
@@ -24,9 +28,11 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "brainstorming.db";
     private static final int DATABASE_VERSION = 1;
 
+    private User user;
+    private SQLiteDatabase database;
     // Database creation sql statement
-    private static final String TABLE_ACCOUNT_CREATE = "create table if not exist"
-            + TABLE_ACCOUNT + "( "
+    private static final String TABLE_ACCOUNT_CREATE = "create table if not exist "
+            + TABLE_ACCOUNT_NAME + "( "
             + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_NAME + " text not null, "
             + COLUMN_SURNAME + " text not null, "
@@ -34,7 +40,6 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_PHONE + " text not null, "
             + COLUMN_BIRTHDAY + " text not null );";
 
-    @Inject
     public BrainStormingSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -50,7 +55,25 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
         Log.w(BrainStormingSQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT_NAME);
         onCreate(db);
+    }
+
+    public void saveUser(User user) {
+        this.user = user;
+        database = getWritableDatabase();
+        database.execSQL("insert into "+ TABLE_ACCOUNT_NAME +" ("
+                + COLUMN_NAME + ","
+                + COLUMN_SURNAME + ","
+                + COLUMN_EMAIL + ","
+                + COLUMN_PHONE + ","
+                + COLUMN_BIRTHDAY + ","
+                +") values ("
+                + user.getName()+ ","
+                + user.getSurname()+ ","
+                + user.getEmail()+ ","
+                + user.getPhone()+ ","
+                + user.getBirthday()+ ");");
+        close();
     }
 }
