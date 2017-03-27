@@ -1,6 +1,7 @@
 package databaseStuff;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -30,15 +31,16 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
 
     private User user;
     private SQLiteDatabase database;
+    private Cursor lastCursor;
     // Database creation sql statement
-    private static final String TABLE_ACCOUNT_CREATE = "create table if not exist "
-            + TABLE_ACCOUNT_NAME + "( "
-            + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_NAME + " text not null, "
-            + COLUMN_SURNAME + " text not null, "
-            + COLUMN_EMAIL + " text not null, "
-            + COLUMN_PHONE + " text not null, "
-            + COLUMN_BIRTHDAY + " text not null );";
+    private static final String TABLE_ACCOUNT_CREATE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_ACCOUNT_NAME + " ( "
+            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_NAME + " TEXT NOT NULL, "
+            + COLUMN_SURNAME + " TEXT NOT NULL, "
+            + COLUMN_EMAIL + " TEXT NOT NULL, "
+            + COLUMN_PHONE + " TEXT NOT NULL, "
+            + COLUMN_BIRTHDAY + " TEXT NOT NULL );";
 
     public BrainStormingSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,6 +49,7 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
+        Log.i("Brainstorming", TABLE_ACCOUNT_CREATE);
         database.execSQL(TABLE_ACCOUNT_CREATE);
     }
 
@@ -62,18 +65,39 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
     public void saveUser(User user) {
         this.user = user;
         database = getWritableDatabase();
-        database.execSQL("insert into "+ TABLE_ACCOUNT_NAME +" ("
+        String query = "insert into "+ TABLE_ACCOUNT_NAME +" ("
+                            + COLUMN_NAME + ","
+                            + COLUMN_SURNAME + ","
+                            + COLUMN_EMAIL + ","
+                            + COLUMN_PHONE + ","
+                            + COLUMN_BIRTHDAY + ")"
+                            +" values ("
+                            + "'" + user.getName()+ "',"
+                            + "'" + user.getSurname()+ "',"
+                            + "'" + user.getEmail()+ "',"
+                            + "'" + user.getPhone()+ "',"
+                            + "'" + user.getBirthday()+ "');";
+        Log.i("Brainstorming", query);
+        database.execSQL(query);
+        close();
+    }
+
+    public Cursor getUserInfo() {
+        database = getReadableDatabase();
+        String query = "select "
                 + COLUMN_NAME + ","
                 + COLUMN_SURNAME + ","
                 + COLUMN_EMAIL + ","
                 + COLUMN_PHONE + ","
-                + COLUMN_BIRTHDAY + ","
-                +") values ("
-                + user.getName()+ ","
-                + user.getSurname()+ ","
-                + user.getEmail()+ ","
-                + user.getPhone()+ ","
-                + user.getBirthday()+ ");");
-        close();
+                + COLUMN_BIRTHDAY + ""
+                +" from "
+                + TABLE_ACCOUNT_NAME +";";
+        Log.i("Brainstorming", query);
+        if(lastCursor != null){
+            lastCursor.close();
+        }
+        lastCursor = database.rawQuery(query, null);
+        //close();
+        return lastCursor;
     }
 }

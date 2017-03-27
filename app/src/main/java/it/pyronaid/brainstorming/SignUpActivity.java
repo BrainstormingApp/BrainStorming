@@ -128,6 +128,8 @@ public class SignUpActivity extends AppCompatActivity {
                 try {
                     answer = sServerAuthenticate.userSignUp(name, accountName, accountPassword, mAuthTokenType);
 
+                    brainStormingSQLiteHelper.saveUser(answer.getUser());
+
                     if(answer.getError().toUpperCase().equals(AuthenticatorActivity.ERROR_FALSE)) {
                         SystemClock.sleep(2000);
                         authtoken = answer.getUser().getAuthToken();

@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import applications.BrainStormingApplications;
 import asynctask.CheckAuthTokenTask;
 import asynctask.RemoveAuthTokenTask;
+import databaseStuff.BrainStormingSQLiteHelper;
 import menuFragments.HomeFragment;
 import menuFragments.LogInFragment;
 import menuFragments.LogOutFragment;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 
 	@Inject
 	AccountManagerUtils accountManagerUtils;
+
+	@Inject
+	BrainStormingSQLiteHelper brainStormingSQLiteHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -172,5 +176,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 	@Override
 	public void onFragmentInteraction(Uri uri) {
 		Log.i("GIOVANNI",uri.toString());
+	}
+
+	public BrainStormingSQLiteHelper getBrainStormingSQLiteHelper() {
+		return brainStormingSQLiteHelper;
 	}
 }

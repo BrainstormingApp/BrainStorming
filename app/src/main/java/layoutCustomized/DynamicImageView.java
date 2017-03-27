@@ -25,10 +25,10 @@ public class DynamicImageView extends ImageView {
             int width = MeasureSpec.getSize(widthMeasureSpec);
 
             height = (int) Math.ceil(width * (float) d.getIntrinsicHeight() / d.getIntrinsicWidth());
-            Log.i("misure",height+"");
-            Log.i("misure",width+"");
-            Log.i("misure",d.getIntrinsicHeight()+"");
-            Log.i("misure",d.getIntrinsicWidth()+"");
+            //Log.i("misure",height+"");
+            //Log.i("misure",width+"");
+            //Log.i("misure",d.getIntrinsicHeight()+"");
+            //Log.i("misure",d.getIntrinsicWidth()+"");
 
             //if(width >= height)
             //    height = (int) Math.ceil(width * (float) d.getIntrinsicHeight() / d.getIntrinsicWidth());

@@ -1,13 +1,19 @@
 package menuFragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import adapter.AccountInformationAdapter;
+import adapter.CustomLinearLayoutManager;
+import it.pyronaid.brainstorming.MainActivity;
 import it.pyronaid.brainstorming.R;
 
 /**
@@ -29,6 +35,7 @@ public class MyProfileFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private RecyclerView mRecyclerView;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -59,13 +66,26 @@ public class MyProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_my_profile, container, false);
+
+        Cursor cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
+        AccountInformationAdapter accountInformationAdapter = new AccountInformationAdapter(getActivity().getApplicationContext(), cursor);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_information);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setHasFixedSize(true);
+        CustomLinearLayoutManager mLayoutManager = new CustomLinearLayoutManager(getActivity());
+        mLayoutManager.setScrollEnabled(false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(accountInformationAdapter);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
