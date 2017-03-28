@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 
 import authenticatorStuff.AccountManagerUtils;
+import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.R;
 
 /**
@@ -15,10 +16,12 @@ public class RemoveAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Vo
     private AccountManagerUtils accountManagerUtils;
     private Activity whereTaskHaveToRefer;
     private ProgressDialog dialog;
+    private BrainStormingSQLiteHelper brainStormingSQLiteHelper;
 
 
-    public RemoveAuthTokenTask(Activity activity) {
+    public RemoveAuthTokenTask(Activity activity, BrainStormingSQLiteHelper brainStormingSQLiteHelper) {
         this.whereTaskHaveToRefer = activity;
+        this.brainStormingSQLiteHelper = brainStormingSQLiteHelper;
         this.dialog = new ProgressDialog(activity, R.style.AppTheme_Dark_Dialog);
     }
     //SessionManager sessionManager;
@@ -35,6 +38,9 @@ public class RemoveAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Vo
     @Override
     protected Void doInBackground(AccountManagerUtils... accountManagerUtils) {
         this.accountManagerUtils = accountManagerUtils[0];
+        if(brainStormingSQLiteHelper != null){
+            brainStormingSQLiteHelper.dropAll();
+        }
         this.accountManagerUtils.removeAccount(whereTaskHaveToRefer);
         SystemClock.sleep(2000);
         return null;

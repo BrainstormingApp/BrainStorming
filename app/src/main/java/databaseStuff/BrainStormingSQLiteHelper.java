@@ -41,6 +41,8 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_PHONE + " TEXT NOT NULL, "
             + COLUMN_BIRTHDAY + " TEXT NOT NULL );";
+    private static final String TABLE_ACCOUNT_CLEAN = "DROP TABLE IF EXISTS "
+            + TABLE_ACCOUNT_NAME +";";
 
     public BrainStormingSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,7 +60,8 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
         Log.w(BrainStormingSQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT_NAME);
+        Log.i("Brainstorming", TABLE_ACCOUNT_CLEAN);
+        database.execSQL(TABLE_ACCOUNT_CLEAN);
         onCreate(db);
     }
 
@@ -99,5 +102,17 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
         lastCursor = database.rawQuery(query, null);
         //close();
         return lastCursor;
+    }
+
+    public void dropAll() {
+        if(lastCursor != null){
+            lastCursor.close();
+        }
+        database = getWritableDatabase();
+        Log.i("Brainstorming", TABLE_ACCOUNT_CLEAN);
+        database.execSQL(TABLE_ACCOUNT_CLEAN);
+        Log.i("Brainstorming", TABLE_ACCOUNT_CREATE);
+        database.execSQL(TABLE_ACCOUNT_CREATE);
+        close();
     }
 }

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 			case R.id.drawer_logout_fragment:
 				//fragmentClass = LogOutFragment.class;
                 fragmentClass = HomeFragment.class;
-				new RemoveAuthTokenTask(this).execute(accountManagerUtils);
+				new RemoveAuthTokenTask(this, brainStormingSQLiteHelper).execute(accountManagerUtils);
                 break;
 			case R.id.drawer_myprofile_fragment:
 				fragmentClass = MyProfileFragment.class;

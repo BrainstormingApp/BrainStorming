@@ -173,9 +173,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 try {
                     answer = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
 
-                    brainStormingSQLiteHelper.saveUser(answer.getUser());
-
                     if(answer.getError().toUpperCase().equals(ERROR_FALSE)) {
+                        brainStormingSQLiteHelper.saveUser(answer.getUser());
                         SystemClock.sleep(2000);
                         authtoken = answer.getUser().getAuthToken();
                         data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
