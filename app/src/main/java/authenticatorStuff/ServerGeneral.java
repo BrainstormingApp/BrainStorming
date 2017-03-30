@@ -9,5 +9,6 @@ public class ServerGeneral {
      */
     public static final String URL_SIGNUP = "http://brainstormingapp.esy.es/signup.php";
     public static final String URL_SIGNIN = "http://brainstormingapp.esy.es/login.php";
+    public static final String URL_EDIT_USER_INFO = "http://brainstormingapp.esy.es/editUserInfo.php";
     //public static final String STRING_HOST = "android.schoolportal.gr";
 }

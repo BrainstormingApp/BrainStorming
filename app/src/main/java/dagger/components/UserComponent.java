@@ -19,6 +19,7 @@ import dagger.scopes.UserScope;
 import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.AuthenticatorActivity;
 import it.pyronaid.brainstorming.MainActivity;
+import it.pyronaid.brainstorming.ServicesViewActivity;
 import it.pyronaid.brainstorming.SignUpActivity;
 import validatorStuff.ValidatorInputs;
 
@@ -27,4 +28,5 @@ import validatorStuff.ValidatorInputs;
 public interface UserComponent {
     void inject(AuthenticatorActivity activity);
     void inject(SignUpActivity activity);
+    void inject(ServicesViewActivity activity);
 }

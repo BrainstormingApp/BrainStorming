@@ -115,4 +115,45 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
         database.execSQL(TABLE_ACCOUNT_CREATE);
         close();
     }
+
+    public void editField(String tableName, String columnName, String value) {
+        if(isFieldExist(tableName,columnName) && user != null){
+            database = getReadableDatabase();
+            String query = "update "+ tableName+" SET "
+                    + columnName + "='" + value + "'"
+                    + " WHERE "
+                    + COLUMN_EMAIL + "='" + user.getEmail() + "';";
+            Log.i("Brainstorming", query);
+            database.execSQL(query);
+            close();
+        } else {
+            Log.e("Brainstorming", "Table "+tableName+" cannot be update because it does not have the column "+columnName);
+        }
+    }
+
+
+    public boolean isFieldExist(String tableName, String fieldName) {
+        boolean isExist = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("PRAGMA table_info(" + tableName + ")", null);
+
+        if (res.moveToFirst()) {
+            do {
+                int value = res.getColumnIndex("name");
+                if(value != -1 && res.getString(value).equals(fieldName)){
+                    isExist = true;
+                    break;
+                }
+                // Add book to books
+
+            } while (res.moveToNext());
+        }
+
+        close();
+        return isExist;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

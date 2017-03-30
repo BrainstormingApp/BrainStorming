@@ -76,7 +76,7 @@ public class MyProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         Cursor cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
-        AccountInformationAdapter accountInformationAdapter = new AccountInformationAdapter(getActivity().getApplicationContext(), cursor);
+        AccountInformationAdapter accountInformationAdapter = new AccountInformationAdapter(getActivity(), cursor);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_information);
         mRecyclerView.setNestedScrollingEnabled(false);
