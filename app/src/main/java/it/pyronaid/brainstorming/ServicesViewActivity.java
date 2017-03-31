@@ -108,7 +108,7 @@ public class ServicesViewActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        new CheckAuthTokenTask(this).execute(accountManagerUtils);
+        new CheckAuthTokenTask(this, brainStormingSQLiteHelper).execute(accountManagerUtils);
         super.onStart();
     }
 }

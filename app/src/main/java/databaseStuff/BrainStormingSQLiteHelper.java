@@ -156,4 +156,21 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
     public User getUser() {
         return user;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void autoDefineUser() {
+        Cursor c = getUserInfo();
+        c.moveToFirst();
+        User u = new User();
+        u.setName(c.getString(c.getColumnIndex(COLUMN_NAME)));
+        u.setSurname(c.getString(c.getColumnIndex(COLUMN_SURNAME)));
+        u.setBirthday(c.getString(c.getColumnIndex(COLUMN_BIRTHDAY)));
+        u.setEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
+        u.setPhone(c.getString(c.getColumnIndex(COLUMN_PHONE)));
+
+        this.user = u;
+    }
 }

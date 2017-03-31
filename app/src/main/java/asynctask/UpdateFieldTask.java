@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,6 +77,9 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
         String type = parameters[1];
         String value = parameters[2];
         User u = brainStormingSQLiteHelper.getUser();
+
+        boolean flag = false;
+
         if(u != null && u.getEmail() != null) {
 
             Log.d("Brainstorming", "editFiedUserInformation");
@@ -109,8 +114,9 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
 
                 answer = new Gson().fromJson(answerString, ParseComAnswer.class);
 
-                if(answer.getError().toUpperCase().equals(AuthenticatorActivity.ERROR_TRUE)) {
-                    return false;
+                if(answer != null && !answer.getError().toUpperCase().equals(AuthenticatorActivity.ERROR_TRUE)) {
+                    brainStormingSQLiteHelper.setUser(answer.getUser());
+                    flag = true;
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -120,15 +126,19 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (JsonSyntaxException e){
+                e.printStackTrace();
             }
 
-            brainStormingSQLiteHelper.editField(table, type, value);
+            if(flag) {
+                brainStormingSQLiteHelper.editField(table, type, value);
+            }
 
-            SystemClock.sleep(500);
-            return true;
         } else{
-            return false;
+            SystemClock.sleep(500);
         }
+
+        return flag;
     }
 
     @Override
@@ -142,9 +152,20 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
             SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance(answer.getTitle(), answer.getError_msg());
             //Show DialogFragment
             simpleDialogFragment.show(fm , answer.getTitle());
+        } else if(!result){
+            FragmentManager fm = whereTaskHaveToRefer.getFragmentManager();
+            SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("Unknown Error", "Something goes wrong in editing user information");
+            //Show DialogFragment
+            simpleDialogFragment.show(fm , "Unknown Error");
         }
         if(result) {
-            Toast.makeText(whereTaskHaveToRefer, "Change Done!!", Toast.LENGTH_SHORT).show();
+            Intent data = new Intent();
+            if (whereTaskHaveToRefer.getParent() == null) {
+                whereTaskHaveToRefer.setResult(Activity.RESULT_OK, data);
+            } else {
+                whereTaskHaveToRefer.getParent().setResult(Activity.RESULT_OK, data);
+            }
+            whereTaskHaveToRefer.finish();
         }
     }
 

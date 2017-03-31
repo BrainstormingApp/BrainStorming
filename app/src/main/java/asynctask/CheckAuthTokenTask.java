@@ -12,6 +12,8 @@ import android.os.SystemClock;
 
 import authenticatorStuff.AccountGeneral;
 import authenticatorStuff.AccountManagerUtils;
+import authenticatorStuff.User;
+import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.R;
 
 /**
@@ -20,10 +22,12 @@ import it.pyronaid.brainstorming.R;
 public class CheckAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Boolean> {
     private AccountManagerUtils accountManagerUtils;
     private Activity whereTaskHaveToRefer;
+    private BrainStormingSQLiteHelper brainStormingSQLiteHelper;
 
 
-    public CheckAuthTokenTask(Activity activity) {
+    public CheckAuthTokenTask(Activity activity, BrainStormingSQLiteHelper brainStormingSQLiteHelper) {
         this.whereTaskHaveToRefer = activity;
+        this.brainStormingSQLiteHelper = brainStormingSQLiteHelper;
     }
 
 
@@ -41,6 +45,9 @@ public class CheckAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Boo
             addAccount=true;
         } else {
             addAccount = accountManagerUtils.validateAuthToken(whereTaskHaveToRefer);
+            if(!addAccount && brainStormingSQLiteHelper.getUser() == null){
+                brainStormingSQLiteHelper.autoDefineUser();
+            }
         }
 
         if(addAccount){

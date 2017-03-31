@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 
 	@Override
 	protected void onStart() {
-		new CheckAuthTokenTask(this).execute(accountManagerUtils);
+		new CheckAuthTokenTask(this, brainStormingSQLiteHelper).execute(accountManagerUtils);
 		super.onStart();
 	}
 

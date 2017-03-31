@@ -2,6 +2,8 @@ package authenticatorStuff;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -103,6 +105,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
             //throw new Exception("Error signing-in ["+error.error_code+"] - " + error.error_msg);
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException e){
             e.printStackTrace();
         }
 

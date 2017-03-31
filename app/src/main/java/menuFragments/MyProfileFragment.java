@@ -1,6 +1,8 @@
 package menuFragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import adapter.AccountInformationAdapter;
 import adapter.CustomLinearLayoutManager;
@@ -36,6 +39,8 @@ public class MyProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
+    private AccountInformationAdapter accountInformationAdapter;
+    private Cursor cursor;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -75,8 +80,8 @@ public class MyProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
-        Cursor cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
-        AccountInformationAdapter accountInformationAdapter = new AccountInformationAdapter(getActivity(), cursor);
+        cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
+        accountInformationAdapter = new AccountInformationAdapter(this, cursor);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_information);
         mRecyclerView.setNestedScrollingEnabled(false);
@@ -125,5 +130,16 @@ public class MyProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
+            accountInformationAdapter.changeCursor(cursor);
+            //Toast.makeText(getActivity(), "Change Done!!", Toast.LENGTH_SHORT).show();
+            //some code
+        }
     }
 }

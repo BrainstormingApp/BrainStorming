@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,9 +29,11 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
     public static final String KEY_INTENT_FOR_TYPE = "Type";
     public static final String KEY_INTENT_FOR_TABLE_NAME = "TableName";
     private Context mContext;
+    private Fragment fragment;
     private Cursor mCursor;
     private Map<String,String> mMapOfCursor;
     private List<String> mListKeys;
+    private DataSetObserver mDataSetObserver;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView value;
@@ -44,9 +47,11 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
         }
     }
 
-    public AccountInformationAdapter(Context context, Cursor cursor) {
-        this.mContext = context;
+    public AccountInformationAdapter(Fragment fragment, Cursor cursor) {
+        this.mContext = fragment.getActivity();
         this.mCursor = cursor;
+        this.fragment = fragment;
+        mDataSetObserver = new NotifyingDataSetObserver();
 
         mMapOfCursor = new HashMap<String, String>();
         mListKeys = new ArrayList<String>();
@@ -55,12 +60,14 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
         //    mMapOfCursor.put(mCursor.getColumnName(mCursor.getPosition()), mCursor.getString(mCursor.getPosition()));
         //    mListKeys.add(mCursor.getColumnName(mCursor.getPosition()));
         //}
-        mCursor.moveToFirst();
-        for(int i=0; i < mCursor.getColumnNames().length; i++){
-            mMapOfCursor.put(mCursor.getColumnName(i), mCursor.getString(i));
-            mListKeys.add(mCursor.getColumnName(i));
+        if(mCursor != null) {
+            mCursor.registerDataSetObserver(mDataSetObserver);
+            mCursor.moveToFirst();
+            for (int i = 0; i < mCursor.getColumnNames().length; i++) {
+                mMapOfCursor.put(mCursor.getColumnName(i), mCursor.getString(i));
+                mListKeys.add(mCursor.getColumnName(i));
+            }
         }
-
     }
 
     @Override
@@ -91,7 +98,7 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
                 i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
                 i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
                 i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
-                mContext.startActivity(i);
+                fragment.startActivityForResult(i, 1);
             }
         });
     }
@@ -103,6 +110,57 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
             return mCursor.getColumnNames().length;
         }
         return 0;
+    }
+
+    public void changeCursor(Cursor cursor) {
+        Cursor old = swapCursor(cursor);
+        if (old != null) {
+            old.close();
+        }
+    }
+
+    public Cursor swapCursor(Cursor newCursor) {
+        if (newCursor == mCursor) {
+            return null;
+        }
+        final Cursor oldCursor = mCursor;
+        if (oldCursor != null && mDataSetObserver != null) {
+            oldCursor.unregisterDataSetObserver(mDataSetObserver);
+        }
+        mCursor = newCursor;
+        if (mCursor != null) {
+            if (mDataSetObserver != null) {
+                mCursor.registerDataSetObserver(mDataSetObserver);
+            }
+
+            mMapOfCursor.clear();
+            mListKeys.clear();
+            mCursor.moveToFirst();
+            for (int i = 0; i < mCursor.getColumnNames().length; i++) {
+                mMapOfCursor.put(mCursor.getColumnName(i), mCursor.getString(i));
+                mListKeys.add(mCursor.getColumnName(i));
+            }
+
+        }
+
+        notifyDataSetChanged();
+        //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
+        return oldCursor;
+    }
+
+    private class NotifyingDataSetObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onInvalidated() {
+            super.onInvalidated();
+            notifyDataSetChanged();
+            //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
+        }
     }
 
 }
