@@ -76,6 +76,10 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
         String table = parameters[0];
         String type = parameters[1];
         String value = parameters[2];
+        String flagDate = null;
+        if(parameters.length >= 4) {
+            flagDate = parameters[3];
+        }
         User u = brainStormingSQLiteHelper.getUser();
 
         boolean flag = false;
@@ -98,6 +102,9 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
                 jsonParam.put("email", URLEncoder.encode(u.getEmail(), "UTF-8"));
                 jsonParam.put("type", URLEncoder.encode(type, "UTF-8"));
                 jsonParam.put("value", URLEncoder.encode(value, "UTF-8"));
+                if(flagDate != null){
+                    jsonParam.put("flag", URLEncoder.encode(flagDate, "UTF-8"));
+                }
 
                 DataOutputStream dStream = new DataOutputStream(connection.getOutputStream());
                 //Writes out the string to the underlying output stream as a sequence of bytes

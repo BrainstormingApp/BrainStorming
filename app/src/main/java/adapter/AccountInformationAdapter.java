@@ -1,6 +1,5 @@
 package adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -22,7 +20,8 @@ import java.util.Map;
 
 import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.R;
-import it.pyronaid.brainstorming.ServicesViewActivity;
+import it.pyronaid.brainstorming.ServicesViewDatePickerActivity;
+import it.pyronaid.brainstorming.ServicesViewEditTextActivity;
 
 public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInformationAdapter.ViewHolder> {
     public static final String KEY_INTENT_FOR_VALUE = "Value";
@@ -91,16 +90,33 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
 
         holder.value.setText(valueOfView);
         holder.label.setText(WordUtils.capitalize(referTo));
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent i = new Intent(mContext, ServicesViewActivity.class);
-                i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
-                i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
-                i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
-                fragment.startActivityForResult(i, 1);
-            }
-        });
+
+        switch (classifyTypeOfEdit(referTo)) {
+            case 1:
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(mContext, ServicesViewEditTextActivity.class);
+                        i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
+                        i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
+                        i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
+                        fragment.startActivityForResult(i, 1);
+                    }
+                });
+                break;
+            case 2:
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(mContext, ServicesViewDatePickerActivity.class);
+                        i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
+                        i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
+                        i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
+                        fragment.startActivityForResult(i, 1);
+                    }
+                });
+                break;
+        }
     }
 
     @Override
@@ -161,6 +177,15 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
             notifyDataSetChanged();
             //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
         }
+    }
+
+
+    private int classifyTypeOfEdit(String type){
+        if(type.toLowerCase().equals(BrainStormingSQLiteHelper.COLUMN_BIRTHDAY)){
+            return 2;
+        }
+
+        return 1;
     }
 
 }

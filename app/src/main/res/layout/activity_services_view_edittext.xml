@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".ServicesViewEditTextActivity"
+    android:fillViewport="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- This LinearLayout represents the contents of the screen  -->
+        <LinearLayout
+            android:id="@+id/first_line_of_services_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- The ActionBar displayed at the top -->
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="170dp"
+                android:padding="10dp"
+                android:id="@+id/imageview_for_edit"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_logo_change"
+                android:scaleType="fitCenter" />
+
+            <!-- The main content view where fragments are loaded -->
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/edit_value_string"
+                android:inputType="text"
+                android:padding="10dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="bottom"
+            android:layout_below="@+id/first_line_of_services_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/button_cancel"
+                style="@android:style/Widget.Button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textStyle="normal|bold"/>
+
+            <Button
+                android:id="@+id/button_edit_ok"
+                style="@android:style/Widget.Button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                android:textStyle="normal|bold"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
