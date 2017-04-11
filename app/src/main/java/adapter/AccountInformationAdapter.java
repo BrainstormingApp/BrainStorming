@@ -19,14 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 import databaseStuff.BrainStormingSQLiteHelper;
+import intentStuff.RequestCodeGeneral;
 import it.pyronaid.brainstorming.R;
 import it.pyronaid.brainstorming.ServicesViewDatePickerActivity;
 import it.pyronaid.brainstorming.ServicesViewEditTextActivity;
 
 public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInformationAdapter.ViewHolder> {
-    public static final String KEY_INTENT_FOR_VALUE = "Value";
-    public static final String KEY_INTENT_FOR_TYPE = "Type";
-    public static final String KEY_INTENT_FOR_TABLE_NAME = "TableName";
     private Context mContext;
     private Fragment fragment;
     private Cursor mCursor;
@@ -97,10 +95,10 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(mContext, ServicesViewEditTextActivity.class);
-                        i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
-                        i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
-                        i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
-                        fragment.startActivityForResult(i, 1);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_VALUE, valueOfView);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_TYPE, referTo);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
+                        fragment.startActivityForResult(i, RequestCodeGeneral.REQ_EDIT);
                     }
                 });
                 break;
@@ -109,10 +107,10 @@ public class AccountInformationAdapter extends RecyclerView.Adapter<AccountInfor
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(mContext, ServicesViewDatePickerActivity.class);
-                        i.putExtra(KEY_INTENT_FOR_VALUE, valueOfView);
-                        i.putExtra(KEY_INTENT_FOR_TYPE, referTo);
-                        i.putExtra(KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
-                        fragment.startActivityForResult(i, 1);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_VALUE, valueOfView);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_TYPE, referTo);
+                        i.putExtra(RequestCodeGeneral.KEY_INTENT_FOR_TABLE_NAME, BrainStormingSQLiteHelper.TABLE_ACCOUNT_NAME);
+                        fragment.startActivityForResult(i, RequestCodeGeneral.REQ_EDIT);
                     }
                 });
                 break;

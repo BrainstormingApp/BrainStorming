@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <!-- This LinearLayout represents the contents of the screen  -->
         <LinearLayout
-            android:id="@+id/first_line_of_services_view"
+            android:id="@+id/first_line_of_services_view_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="170dp"
                 android:padding="10dp"
-                android:id="@+id/imageview_for_edit"
+                android:id="@+id/imageview_for_edit_et"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_logo_change"
                 android:scaleType="fitCenter" />
@@ -47,12 +47,12 @@
         </LinearLayout>
         <LinearLayout
             android:gravity="bottom"
-            android:layout_below="@+id/first_line_of_services_view"
+            android:layout_below="@+id/first_line_of_services_view_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
             <Button
-                android:id="@+id/button_cancel"
+                android:id="@+id/button_cancel_et"
                 style="@android:style/Widget.Button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -61,7 +61,7 @@
                 android:textStyle="normal|bold"/>
 
             <Button
-                android:id="@+id/button_edit_ok"
+                android:id="@+id/button_edit_ok_et"
                 style="@android:style/Widget.Button"
                 android:layout_width="0dp"
                 android:layout_weight="1"

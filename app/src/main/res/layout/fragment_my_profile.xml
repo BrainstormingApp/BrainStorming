@@ -24,6 +24,16 @@
                     android:background="@drawable/border_solid"
                     android:layout_margin="30dp" />
 
+                <ImageButton
+                    android:id="@+id/button_edit_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit"
+                    android:background="@color/white"
+                    android:layout_margin="3dp"
+                    android:layout_alignBottom="@id/big_profile_picture"
+                    android:layout_alignRight="@id/big_profile_picture"/>
+
                 <!-- TODO: Update blank fragment layout -->
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/user_information"

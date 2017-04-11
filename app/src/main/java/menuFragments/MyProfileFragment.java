@@ -7,17 +7,21 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
-
 import adapter.AccountInformationAdapter;
 import adapter.CustomLinearLayoutManager;
+import cropperStuff.CropImage;
+import cropperStuff.CropImageView;
+import intentStuff.RequestCodeGeneral;
 import it.pyronaid.brainstorming.MainActivity;
 import it.pyronaid.brainstorming.R;
+import layoutCustomized.DynamicImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +43,7 @@ public class MyProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
+    private DynamicImageView dynamicImageView;
     private AccountInformationAdapter accountInformationAdapter;
     private Cursor cursor;
 
@@ -82,7 +87,7 @@ public class MyProfileFragment extends Fragment {
 
         cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
         accountInformationAdapter = new AccountInformationAdapter(this, cursor);
-
+        dynamicImageView = (DynamicImageView) rootView.findViewById(R.id.big_profile_picture);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_information);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
@@ -90,6 +95,15 @@ public class MyProfileFragment extends Fragment {
         mLayoutManager.setScrollEnabled(false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(accountInformationAdapter);
+
+        ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.button_edit_picture);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCropImageActivity(null);
+            }
+        });
+
         return rootView;
     }
 
@@ -135,11 +149,33 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        if(requestCode == RequestCodeGeneral.REQ_EDIT && resultCode == Activity.RESULT_OK) {
             cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
             accountInformationAdapter.changeCursor(cursor);
             //Toast.makeText(getActivity(), "Change Done!!", Toast.LENGTH_SHORT).show();
             //some code
+        } else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                //Make different staff
+                dynamicImageView.setImageURI(result.getUri());
+                Toast.makeText(getActivity(), "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+
         }
+
+    }
+
+
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setScaleType(CropImageView.ScaleType.FIT_CENTER)
+                .setAspectRatio(1,1)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .setAllowCounterRotation(true)
+                .start(getContext(), this);
     }
 }

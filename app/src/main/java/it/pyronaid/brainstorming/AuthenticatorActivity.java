@@ -23,6 +23,7 @@ import dialogs.SimpleDialogFragment;
 import authenticatorStuff.AccountAuthenticatorActivity;
 import authenticatorStuff.AccountGeneral;
 import authenticatorStuff.ParseComAnswer;
+import intentStuff.RequestCodeGeneral;
 import validatorStuff.ValidatorInputs;
 
 import static authenticatorStuff.AccountGeneral.sServerAuthenticate;
@@ -40,8 +41,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ERROR_FALSE = "FALSE";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
-
-    private final int REQ_SIGNUP = 1;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -116,7 +115,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     signup.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, savedInstanceState.getString(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE));
 
                 }
-                startActivityForResult(signup, REQ_SIGNUP);
+                startActivityForResult(signup, RequestCodeGeneral.REQ_SIGNUP);
             }
         });
     }
@@ -137,7 +136,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // The sign up activity returned that the user has successfully created an account
-        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
+        if (requestCode == RequestCodeGeneral.REQ_SIGNUP && resultCode == RESULT_OK) {
             finishLogin(data);
         } else {
             super.onActivityResult(requestCode, resultCode, data);

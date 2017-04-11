@@ -14,7 +14,7 @@
 
         <!-- This LinearLayout represents the contents of the screen  -->
         <LinearLayout
-            android:id="@+id/first_line_of_services_view"
+            android:id="@+id/first_line_of_services_view_dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -49,12 +49,12 @@
         </LinearLayout>
         <LinearLayout
             android:gravity="bottom"
-            android:layout_below="@+id/first_line_of_services_view"
+            android:layout_below="@+id/first_line_of_services_view_dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
             <Button
-                android:id="@+id/button_cancel"
+                android:id="@+id/button_cancel_dp"
                 style="@android:style/Widget.Button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -63,7 +63,7 @@
                 android:textStyle="normal|bold"/>
 
             <Button
-                android:id="@+id/button_edit_ok"
+                android:id="@+id/button_edit_ok_dp"
                 style="@android:style/Widget.Button"
                 android:layout_width="0dp"
                 android:layout_weight="1"

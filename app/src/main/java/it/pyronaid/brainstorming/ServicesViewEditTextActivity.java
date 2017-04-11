@@ -20,6 +20,8 @@ import asynctask.UpdateFieldTask;
 import authenticatorStuff.AccountManagerUtils;
 import databaseStuff.BrainStormingSQLiteHelper;
 import dialogs.SimpleDialogFragment;
+import intentStuff.RequestCodeGeneral;
+import validatorStuff.ValidatorInputs;
 
 public class ServicesViewEditTextActivity extends AppCompatActivity {
     EditText editText;
@@ -35,6 +37,9 @@ public class ServicesViewEditTextActivity extends AppCompatActivity {
     @Inject
     AccountManagerUtils accountManagerUtils;
 
+    @Inject
+    ValidatorInputs validatorInputs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +47,17 @@ public class ServicesViewEditTextActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         editText = (EditText) findViewById(R.id.editText);
-        cancel = (Button) findViewById(R.id.button_cancel);
-        edit = (Button) findViewById(R.id.button_edit_ok);
+        cancel = (Button) findViewById(R.id.button_cancel_et);
+        edit = (Button) findViewById(R.id.button_edit_ok_et);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
-        String value = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_VALUE);
+        String value = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_VALUE);
         originalValue = value;
-        originalType = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_TYPE);
-        tableName = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_TABLE_NAME);
+        originalType = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_TYPE);
+        tableName = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_TABLE_NAME);
         editText.setText(value);
 
         ((BrainStormingApplications)getApplication()).getUserComponent().inject(this);
@@ -74,7 +79,7 @@ public class ServicesViewEditTextActivity extends AppCompatActivity {
     private void complete_edit() {
         String newValue = editText.getText().toString();
         //add validator check
-        if(!newValue.equals(originalValue)){
+        if(validatorInputs.validateString(newValue,originalType) && !newValue.equals(originalValue)){
             if(originalType != null){
                 Button[] buttons = new Button[]{cancel,edit};
                 new UpdateFieldTask(this, brainStormingSQLiteHelper, buttons).execute(new String[]{tableName, originalType, newValue});
@@ -88,7 +93,7 @@ public class ServicesViewEditTextActivity extends AppCompatActivity {
 
         } else {
             FragmentManager fm = getFragmentManager();
-            SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("No change", "No change to execute");
+            SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("No change", "No right change to execute");
             //Show DialogFragment
             simpleDialogFragment.show(fm , "No change");
         }

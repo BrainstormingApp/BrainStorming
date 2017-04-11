@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.AuthenticatorActivity;
 import it.pyronaid.brainstorming.SignUpActivity;
 
@@ -21,6 +22,7 @@ public class ValidatorInputs {
 
     private final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$";
     private final String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-((19|20)\\d\\d)";
+    private final String CELLPHONE_PATTERN = "[0-9]{10}";
     private Pattern pattern;
     private Matcher matcher;
 
@@ -103,5 +105,20 @@ public class ValidatorInputs {
         }
 
         return date;
+    }
+
+    public boolean validatePhone(String phone) {
+        pattern = Pattern.compile(CELLPHONE_PATTERN);
+        matcher = pattern.matcher(phone);
+        if(matcher.matches()){
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean validateString(String newValue, String originalType) {
+        if(originalType.toLowerCase().equals(BrainStormingSQLiteHelper.COLUMN_PHONE)){ return validatePhone(newValue);}
+        return true;
     }
 }

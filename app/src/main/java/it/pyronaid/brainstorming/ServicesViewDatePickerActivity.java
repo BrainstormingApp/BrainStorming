@@ -23,6 +23,7 @@ import asynctask.UpdateFieldTask;
 import authenticatorStuff.AccountManagerUtils;
 import databaseStuff.BrainStormingSQLiteHelper;
 import dialogs.SimpleDialogFragment;
+import intentStuff.RequestCodeGeneral;
 import layoutCustomized.CustomDatePicker;
 import validatorStuff.ValidatorInputs;
 
@@ -50,17 +51,17 @@ public class ServicesViewDatePickerActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         customDatePicker = (CustomDatePicker) findViewById(R.id.datePicker);
-        cancel = (Button) findViewById(R.id.button_cancel);
-        edit = (Button) findViewById(R.id.button_edit_ok);
+        cancel = (Button) findViewById(R.id.button_cancel_dp);
+        edit = (Button) findViewById(R.id.button_edit_ok_dp);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
-        String value = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_VALUE);
+        String value = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_VALUE);
         originalValue = value;
-        originalType = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_TYPE);
-        tableName = intent.getStringExtra(AccountInformationAdapter.KEY_INTENT_FOR_TABLE_NAME);
+        originalType = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_TYPE);
+        tableName = intent.getStringExtra(RequestCodeGeneral.KEY_INTENT_FOR_TABLE_NAME);
 
         ((BrainStormingApplications)getApplication()).getUserComponent().inject(this);
 
@@ -106,7 +107,7 @@ public class ServicesViewDatePickerActivity extends AppCompatActivity {
 
         } else {
             FragmentManager fm = getFragmentManager();
-            SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("No change", "No change to execute");
+            SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("No change", "No right change to execute");
             //Show DialogFragment
             simpleDialogFragment.show(fm , "No change");
         }
