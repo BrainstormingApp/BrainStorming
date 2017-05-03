@@ -167,6 +167,7 @@ public class UpdateFieldTask extends AsyncTask<String, Void, Boolean> {
         }
         if(result) {
             Intent data = new Intent();
+            brainStormingSQLiteHelper.getUser().setRefreshInfo(true);
             if (whereTaskHaveToRefer.getParent() == null) {
                 whereTaskHaveToRefer.setResult(Activity.RESULT_OK, data);
             } else {

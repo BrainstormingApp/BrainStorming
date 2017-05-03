@@ -6,15 +6,24 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.widget.TextView;
+
+import java.io.File;
 
 import authenticatorStuff.AccountGeneral;
 import authenticatorStuff.AccountManagerUtils;
 import authenticatorStuff.User;
 import databaseStuff.BrainStormingSQLiteHelper;
+import it.pyronaid.brainstorming.MainActivity;
 import it.pyronaid.brainstorming.R;
+import layoutCustomized.CircleImageView;
 
 /**
  * Created by pyronaid on 30/01/2017.
@@ -61,6 +70,29 @@ public class CheckAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Boo
     protected void onPostExecute(Boolean result) {
         if(result) {
             accountManagerUtils.showMessage("Add Account ", whereTaskHaveToRefer);
+        } else {
+            // Set some information
+            User u = brainStormingSQLiteHelper.getUser();
+            if(u != null){
+                if (whereTaskHaveToRefer instanceof MainActivity && u.getRefreshInfo() == true) {
+                    TextView profileNameHeader = (TextView) whereTaskHaveToRefer.findViewById(R.id.profile_name_header);
+                    CircleImageView profileImage = (CircleImageView) whereTaskHaveToRefer.findViewById(R.id.profile_image);
+                    if (!u.getName().isEmpty()) {
+                        profileNameHeader.setText(u.getName());
+                    }
+                    ContextWrapper cw = new ContextWrapper(whereTaskHaveToRefer.getApplicationContext());
+                    String directory = cw.getDir("profile", Context.MODE_PRIVATE).getAbsolutePath();
+                    File file = new File(directory + "/Profile.jpg");
+                    if (file.exists()) {
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                        Bitmap finalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                        profileImage.setImageBitmap(finalBitmap);
+                    }
+
+                    u.setRefreshInfo(false);
+                }
+            }
         }
     }
 

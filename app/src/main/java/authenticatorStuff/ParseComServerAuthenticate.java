@@ -1,5 +1,9 @@
 package authenticatorStuff;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -8,7 +12,11 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -16,6 +24,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static authenticatorStuff.ServerGeneral.URL_USER_PIC_BASE_FOLDER;
 
 
 /**
@@ -61,6 +71,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
             //ParseComAnswer error = new Gson().fromJson(responseString, ParseComAnswer.class);
             //throw new Exception("Error creating user["+error.getError_code()+"] - " + error.getError_msg());
 
+        } catch (JsonSyntaxException e){
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,6 +125,39 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         return answer;
     }
 
+    @Override
+    public File userSavePic(String uidUser, ContextWrapper cw) throws Exception{
+        String src = URL_USER_PIC_BASE_FOLDER + uidUser + "/Profile.jpg";
+        java.net.URL url = new java.net.URL(src);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.connect();
+        InputStream input = connection.getInputStream();
+        return saveimagetoFile(BitmapFactory.decodeStream(input), cw);
+    }
+
+    public static File saveimagetoFile(Bitmap bitmap, ContextWrapper cw) {
+        File file = null;
+        try {
+            File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            file = new File(directory, "Profile.jpg");
+
+            FileOutputStream fOut = null;
+            fOut = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            fOut.flush(); // Not really required
+            fOut.close(); // do not forget to close the stream
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
 
     public String readHttpAnswer(HttpURLConnection c){
         String answer="";

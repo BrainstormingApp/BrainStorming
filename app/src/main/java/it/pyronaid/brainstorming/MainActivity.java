@@ -1,6 +1,10 @@
 package it.pyronaid.brainstorming;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,14 +17,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+
+import java.io.File;
 
 import javax.inject.Inject;
 
 import applications.BrainStormingApplications;
 import asynctask.CheckAuthTokenTask;
 import asynctask.RemoveAuthTokenTask;
+import authenticatorStuff.User;
 import databaseStuff.BrainStormingSQLiteHelper;
+import layoutCustomized.CircleImageView;
 import menuFragments.HomeFragment;
 import menuFragments.LogInFragment;
 import menuFragments.LogOutFragment;
@@ -47,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		//Add a property to account manager utils and set one by one ?
+		//Understend how refactor the structure
+		((BrainStormingApplications)getApplication()).getApplicationComponent().inject(this);
+
 		// Set a Toolbar to replace the ActionBar.
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -62,10 +75,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 		nvDrawer = (NavigationView) findViewById(R.id.nvView);
 		// Setup drawer view
 		setupDrawerContent(nvDrawer);
-
-		//Add a property to account manager utils and set one by one ?
-		//Understend how refactor the structure
-		((BrainStormingApplications)getApplication()).getApplicationComponent().inject(this);
 
 		if(savedInstanceState == null) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -180,5 +189,42 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 
 	public BrainStormingSQLiteHelper getBrainStormingSQLiteHelper() {
 		return brainStormingSQLiteHelper;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		try {
+			trimCache(this);
+			// Toast.makeText(this,"onDestroy " ,Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void trimCache(Context context) {
+		try {
+			File dir = context.getCacheDir();
+			if (dir != null && dir.isDirectory()) {
+				deleteDir(dir);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	public static boolean deleteDir(File dir) {
+		if (dir != null && dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+
+		// The directory is now empty so delete it
+		return dir.delete();
 	}
 }

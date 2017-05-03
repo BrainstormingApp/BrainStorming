@@ -2,20 +2,28 @@ package menuFragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.File;
+
 import adapter.AccountInformationAdapter;
 import adapter.CustomLinearLayoutManager;
+import asynctask.ProfileImageProcedureTask;
 import cropperStuff.CropImage;
 import cropperStuff.CropImageView;
 import intentStuff.RequestCodeGeneral;
@@ -87,7 +95,18 @@ public class MyProfileFragment extends Fragment {
 
         cursor = ((MainActivity) getActivity()).getBrainStormingSQLiteHelper().getUserInfo();
         accountInformationAdapter = new AccountInformationAdapter(this, cursor);
+
         dynamicImageView = (DynamicImageView) rootView.findViewById(R.id.big_profile_picture);
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        String directory = cw.getDir("profile", Context.MODE_PRIVATE).getAbsolutePath();
+        File file = new File(directory+"/Profile.jpg");
+        if(file.exists()){
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap finalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+            dynamicImageView.setImageBitmap(finalBitmap);
+        }
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_information);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
@@ -158,8 +177,8 @@ public class MyProfileFragment extends Fragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 //Make different staff
-                dynamicImageView.setImageURI(result.getUri());
-                Toast.makeText(getActivity(), "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
+                new ProfileImageProcedureTask(this, dynamicImageView).execute(result.getUri());
+                Toast.makeText(getActivity(), "Cropping successful", Toast.LENGTH_LONG).show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }

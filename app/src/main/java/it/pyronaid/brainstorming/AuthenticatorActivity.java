@@ -4,7 +4,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -13,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 import javax.inject.Inject;
 
@@ -27,6 +32,7 @@ import intentStuff.RequestCodeGeneral;
 import validatorStuff.ValidatorInputs;
 
 import static authenticatorStuff.AccountGeneral.sServerAuthenticate;
+import static authenticatorStuff.ServerGeneral.URL_USER_PIC_BASE_FOLDER;
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -41,6 +47,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ERROR_FALSE = "FALSE";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
+    private static final String DEFAULT_MESSAGE = "Something goes wrong with log in procedure";
+    private static final String DEFAULT_TITLE = "Unknown Error";
+    private static final String DEFAULT_ERROR = "999";
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -172,18 +181,31 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 try {
                     answer = sServerAuthenticate.userSignIn(userName, userPass, mAuthTokenType);
 
-                    if(answer.getError().toUpperCase().equals(ERROR_FALSE)) {
-                        brainStormingSQLiteHelper.saveUser(answer.getUser());
-                        SystemClock.sleep(2000);
-                        authtoken = answer.getUser().getAuthToken();
-                        data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                        data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                        data.putString(PARAM_USER_PASS, userPass);
+                    if(answer != null) {
+                        if (answer.getError().toUpperCase().equals(ERROR_FALSE)) {
+                            brainStormingSQLiteHelper.saveUser(answer.getUser());
+                            SystemClock.sleep(2000);
+                            authtoken = answer.getUser().getAuthToken();
+                            data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                            data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                            data.putString(PARAM_USER_PASS, userPass);
+
+                            //Dowload profile picture if present
+                            if(answer.getUser().getUid() != null){
+                                ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                                sServerAuthenticate.userSavePic(answer.getUser().getUid(), cw);
+                            }
+
+                        } else {
+                            data.putString(KEY_ERROR_DIALOG, answer.getError());
+                            data.putString(KEY_ERROR_TITLE, answer.getTitle());
+                            data.putString(KEY_ERROR_MESSAGE, answer.getError_msg());
+                        }
                     } else {
-                        data.putString(KEY_ERROR_DIALOG, answer.getError());
-                        data.putString(KEY_ERROR_TITLE, answer.getTitle());
-                        data.putString(KEY_ERROR_MESSAGE, answer.getError_msg());
+                        data.putString(KEY_ERROR_DIALOG, DEFAULT_ERROR);
+                        data.putString(KEY_ERROR_TITLE, DEFAULT_TITLE);
+                        data.putString(KEY_ERROR_MESSAGE, DEFAULT_MESSAGE);
                     }
 
                 } catch (Exception e) {

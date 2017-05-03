@@ -170,7 +170,7 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
         u.setBirthday(c.getString(c.getColumnIndex(COLUMN_BIRTHDAY)));
         u.setEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
         u.setPhone(c.getString(c.getColumnIndex(COLUMN_PHONE)));
-
+        u.setRefreshInfo(true);
         this.user = u;
     }
 }

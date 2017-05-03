@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by pyronaid on 23/11/2016.
  */
 public class User implements Serializable {
+    private String uid;
     private String name;
     private String surname;
     private String email;
@@ -15,6 +16,8 @@ public class User implements Serializable {
     private String timeLastLogin;
     public String authType;
     private String authToken;
+
+    private boolean refreshInfo;
 
 
     public String getName() {
@@ -87,6 +90,22 @@ public class User implements Serializable {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public boolean getRefreshInfo() {
+        return refreshInfo;
+    }
+
+    public void setRefreshInfo(boolean refreshInfo) {
+        this.refreshInfo= refreshInfo;
     }
 }
 

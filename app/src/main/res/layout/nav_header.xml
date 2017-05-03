@@ -28,6 +28,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/profile_image"
         android:textSize="16dp"
+        android:id="@+id/profile_name_header"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:paddingLeft="10dp"
         android:textStyle="bold" />
