@@ -67,6 +67,7 @@ public class BrainStormingSQLiteHelper extends SQLiteOpenHelper {
 
     public void saveUser(User user) {
         this.user = user;
+        user.setRefreshInfo(true);
         database = getWritableDatabase();
         String query = "insert into "+ TABLE_ACCOUNT_NAME +" ("
                             + COLUMN_NAME + ","

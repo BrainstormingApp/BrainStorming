@@ -159,6 +159,17 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         return file;
     }
 
+    public static void deleteImageFromFile(ContextWrapper cw){
+        File file = null;
+        File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+        if (directory.exists()) {
+            file = new File(directory, "Profile.jpg");
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
     public String readHttpAnswer(HttpURLConnection c){
         String answer="";
 

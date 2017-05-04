@@ -2,10 +2,12 @@ package asynctask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContextWrapper;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
 import authenticatorStuff.AccountManagerUtils;
+import authenticatorStuff.ParseComServerAuthenticate;
 import databaseStuff.BrainStormingSQLiteHelper;
 import it.pyronaid.brainstorming.R;
 
@@ -42,6 +44,11 @@ public class RemoveAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Vo
             brainStormingSQLiteHelper.dropAll();
         }
         this.accountManagerUtils.removeAccount(whereTaskHaveToRefer);
+
+        //remove all the profile pictures
+        ContextWrapper cw = new ContextWrapper(whereTaskHaveToRefer.getApplicationContext());
+        ParseComServerAuthenticate.deleteImageFromFile(cw);
+
         SystemClock.sleep(2000);
         return null;
     }

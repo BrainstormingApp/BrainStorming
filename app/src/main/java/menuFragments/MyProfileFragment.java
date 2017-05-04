@@ -193,7 +193,7 @@ public class MyProfileFragment extends Fragment {
                 .setScaleType(CropImageView.ScaleType.FIT_CENTER)
                 .setAspectRatio(1,1)
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setMultiTouchEnabled(true)
+                .setMultiTouchEnabled(false)
                 .setAllowCounterRotation(true)
                 .start(getContext(), this);
     }

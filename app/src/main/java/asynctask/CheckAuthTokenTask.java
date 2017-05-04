@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.design.widget.NavigationView;
+import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
@@ -75,22 +77,27 @@ public class CheckAuthTokenTask extends AsyncTask<AccountManagerUtils, Void, Boo
             User u = brainStormingSQLiteHelper.getUser();
             if(u != null){
                 if (whereTaskHaveToRefer instanceof MainActivity && u.getRefreshInfo() == true) {
-                    TextView profileNameHeader = (TextView) whereTaskHaveToRefer.findViewById(R.id.profile_name_header);
-                    CircleImageView profileImage = (CircleImageView) whereTaskHaveToRefer.findViewById(R.id.profile_image);
-                    if (!u.getName().isEmpty()) {
-                        profileNameHeader.setText(u.getName());
-                    }
-                    ContextWrapper cw = new ContextWrapper(whereTaskHaveToRefer.getApplicationContext());
-                    String directory = cw.getDir("profile", Context.MODE_PRIVATE).getAbsolutePath();
-                    File file = new File(directory + "/Profile.jpg");
-                    if (file.exists()) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                        Bitmap finalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-                        profileImage.setImageBitmap(finalBitmap);
-                    }
+                    NavigationView nvDrawer = (NavigationView) whereTaskHaveToRefer.findViewById(R.id.nvView);
+                    View headerView = nvDrawer.getHeaderView(0);
 
-                    u.setRefreshInfo(false);
+                    TextView profileNameHeader = (TextView) headerView.findViewById(R.id.profile_name_header);
+                    CircleImageView profileImage = (CircleImageView) headerView.findViewById(R.id.profile_image);
+                    if(profileNameHeader != null && profileImage != null) {
+                        if (!u.getName().isEmpty()) {
+                            profileNameHeader.setText(u.getName());
+                        }
+                        ContextWrapper cw = new ContextWrapper(whereTaskHaveToRefer.getApplicationContext());
+                        String directory = cw.getDir("profile", Context.MODE_PRIVATE).getAbsolutePath();
+                        File file = new File(directory + "/Profile.jpg");
+                        if (file.exists()) {
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                            Bitmap finalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                            profileImage.setImageBitmap(finalBitmap);
+                        }
+
+                        u.setRefreshInfo(false);
+                    }
                 }
             }
         }

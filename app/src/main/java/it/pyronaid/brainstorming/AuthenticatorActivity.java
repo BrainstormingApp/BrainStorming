@@ -47,9 +47,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ERROR_FALSE = "FALSE";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
-    private static final String DEFAULT_MESSAGE = "Something goes wrong with log in procedure";
-    private static final String DEFAULT_TITLE = "Unknown Error";
-    private static final String DEFAULT_ERROR = "999";
+    public static final String DEFAULT_MESSAGE = "Something goes wrong with procedure";
+    public static final String DEFAULT_TITLE = "Unknown Error";
+    public static final String DEFAULT_ERROR = "999";
 
     private final String TAG = this.getClass().getSimpleName();
 

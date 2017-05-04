@@ -145,6 +145,8 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                 } catch (Exception e) {
+                    data.putString(AuthenticatorActivity.KEY_ERROR_DIALOG, AuthenticatorActivity.DEFAULT_TITLE);
+                    data.putString(AuthenticatorActivity.KEY_ERROR_TITLE, AuthenticatorActivity.DEFAULT_TITLE);
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }
 
