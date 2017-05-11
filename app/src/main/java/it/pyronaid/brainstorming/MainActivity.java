@@ -29,6 +29,7 @@ import asynctask.CheckAuthTokenTask;
 import asynctask.RemoveAuthTokenTask;
 import authenticatorStuff.User;
 import databaseStuff.BrainStormingSQLiteHelper;
+import dialogs.SimpleDialogFragment;
 import layoutCustomized.CircleImageView;
 import menuFragments.HomeFragment;
 import menuFragments.LogInFragment;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 	public void selectDrawerItem(MenuItem menuItem) {
 		// Create a new fragment and specify the fragment to show based on nav item clicked
 		Fragment fragment = null;
-		Class fragmentClass;
+		Class fragmentClass = null;
 		switch(menuItem.getItemId()) {
 			case R.id.drawer_home_fragment:
 				fragmentClass = HomeFragment.class;
@@ -124,33 +125,37 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 				break;
 			case R.id.drawer_logout_fragment:
 				//fragmentClass = LogOutFragment.class;
-                fragmentClass = HomeFragment.class;
 				new RemoveAuthTokenTask(this, brainStormingSQLiteHelper).execute(accountManagerUtils);
                 break;
 			case R.id.drawer_myprofile_fragment:
 				fragmentClass = MyProfileFragment.class;
 				break;
 			case R.id.drawer_synchro_fragment:
-				fragmentClass = SynchroFragment.class;
+				android.app.FragmentManager fm = getFragmentManager();
+				SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("WIP", "Work in Progress");
+				//Show DialogFragment
+				simpleDialogFragment.show(fm , "WIP");
+				//fragmentClass = SynchroFragment.class;
 				break;
 			default:
 				fragmentClass = HomeFragment.class;
 		}
 
 		try {
-			fragment = (Fragment) fragmentClass.newInstance();
+			if(fragmentClass != null){
+				fragment = (Fragment) fragmentClass.newInstance();
+				// Insert the fragment by replacing any existing fragment
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+				// Highlight the selected item has been done by NavigationView
+				menuItem.setChecked(true);
+				// Set action bar title
+				setTitle(menuItem.getTitle());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		// Insert the fragment by replacing any existing fragment
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-		// Highlight the selected item has been done by NavigationView
-		menuItem.setChecked(true);
-		// Set action bar title
-		setTitle(menuItem.getTitle());
 		// Close the navigation drawer
 		mDrawer.closeDrawers();
 	}
@@ -164,6 +169,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_settings:
+				android.app.FragmentManager fm = getFragmentManager();
+				SimpleDialogFragment simpleDialogFragment = SimpleDialogFragment.newInstance("WIP", "Work in Progress");
+				//Show DialogFragment
+				simpleDialogFragment.show(fm , "WIP");
+				return true;
+		}
+
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
 
