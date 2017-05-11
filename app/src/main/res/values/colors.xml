@@ -6,4 +6,6 @@
 
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="colorFAB">#001279</color>
 </resources>

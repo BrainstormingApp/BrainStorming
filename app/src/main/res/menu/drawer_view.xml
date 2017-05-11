@@ -16,10 +16,6 @@
             android:icon="@drawable/ic_login"
             android:title="@string/drawer_login_string" /-->
         <item
-            android:id="@+id/drawer_logout_fragment"
-            android:icon="@drawable/ic_logout"
-            android:title="@string/drawer_logout_string" />
-        <item
             android:id="@+id/drawer_myprofile_fragment"
             android:icon="@drawable/ic_account"
             android:title="@string/drawer_myprofile_string" />
@@ -32,6 +28,10 @@
 		            android:id="@+id/drawer_synchro_fragment"
 		            android:icon="@drawable/ic_synchro"
 		            android:title="@string/drawer_synchro_string" />
+                <item
+                    android:id="@+id/drawer_logout_fragment"
+                    android:icon="@drawable/ic_logout"
+                    android:title="@string/drawer_logout_string" />
             </group>
         </menu>
     </item>

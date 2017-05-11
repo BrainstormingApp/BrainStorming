@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_my_categories"
     tools:context="menuFragments.MyCategoriesFragment">
 
@@ -10,5 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/drawer_mycategories_string" />
+
+
+
+    <include layout="@layout/fab_layout" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_my_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_not_circle"
+        app:backgroundTint="@color/colorPrimary"
+        />
 
 </FrameLayout>

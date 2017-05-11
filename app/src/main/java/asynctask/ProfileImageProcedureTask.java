@@ -101,7 +101,7 @@ public class ProfileImageProcedureTask extends AsyncTask<Uri, Void, Boolean> {
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
             // The new size we want to scale to
-            final int IMAGE_MAX_SIZE=200 * 1024 * 1024;
+            final int IMAGE_MAX_SIZE=800;
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
             if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
